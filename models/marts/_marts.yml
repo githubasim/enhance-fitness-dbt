@@ -82,3 +82,16 @@ models:
         data_tests:
           - relationships:
               arguments: {to: ref('dim_date'), field: date_key}
+  - name: mart_trainer_utilisation_monthly
+    description: >
+      One row per trainer per full month since hire. Utilisation = delivered hours
+      divided by available hours (weekly availability x 52 / 12). Idle hours exclude
+      no-show slots. The current partial month is excluded.
+    columns:
+      - name: trainer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_trainer'), field: trainer_id}
+      - name: utilisation_pct
+        data_tests: [not_null]
