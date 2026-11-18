@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_sessions
+    description: One row per booked session, with raw status.
+    columns:
+      - name: session_id
+        data_tests: [unique, not_null]
+      - name: session_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [booked, delivered, cancelled, no_show]
+      - name: purchase_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_purchases')
+                field: purchase_id
+
+  - name: stg_purchases
+    description: One row per package purchase, with list and net price.
+    columns:
+      - name: purchase_id
+        data_tests: [unique, not_null]

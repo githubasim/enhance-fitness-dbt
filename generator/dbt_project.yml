@@ -1,0 +1,21 @@
+name: enhance_fitness
+version: "1.0.0"
+config-version: 2
+profile: enhance_fitness
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  enhance_fitness:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts

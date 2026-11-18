@@ -1,0 +1,7 @@
+enhance_fitness:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: enhance.duckdb
+      threads: 4
