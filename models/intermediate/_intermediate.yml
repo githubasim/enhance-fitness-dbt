@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: int_sessions_enriched
+    description: >
+      One row per session with package price, refund flag, trainer commission rate
+      and derived revenue and commission. Revenue is recognised for delivered and
+      no-show sessions; commission is paid on delivered sessions only.
+    columns:
+      - name: session_id
+        data_tests: [unique, not_null]
+      - name: price_per_session_aed
+        data_tests: [not_null]
+      - name: commission_rate
+        data_tests: [not_null]
