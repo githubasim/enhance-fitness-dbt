@@ -1,0 +1,84 @@
+version: 2
+
+models:
+  - name: dim_date
+    columns:
+      - name: date_key
+        data_tests: [unique, not_null]
+
+  - name: dim_club
+    columns:
+      - name: club_id
+        data_tests: [unique, not_null]
+
+  - name: dim_trainer
+    columns:
+      - name: trainer_id
+        data_tests: [unique, not_null]
+      - name: club_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_club'), field: club_id}
+
+  - name: dim_package_type
+    columns:
+      - name: package_type_id
+        data_tests: [unique, not_null]
+
+  - name: dim_client
+    columns:
+      - name: client_id
+        data_tests: [unique, not_null]
+      - name: home_club_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_club'), field: club_id}
+
+  - name: fct_sessions
+    description: >
+      One row per session. Revenue is recognised for delivered and no-show sessions,
+      commission on delivered only. Sessions scheduled before the trainer's hire date
+      are kept and flagged with is_before_trainer_hire.
+    columns:
+      - name: session_id
+        data_tests: [unique, not_null]
+      - name: client_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_client'), field: client_id}
+      - name: trainer_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_trainer'), field: trainer_id}
+      - name: club_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_club'), field: club_id}
+      - name: package_type_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_package_type'), field: package_type_id}
+      - name: session_date_key
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_key}
+
+  - name: fct_packages
+    description: >
+      One row per package purchase, with discount, refund status, session outcomes
+      and the revenue, commission and margin rolled up from fct_sessions logic.
+    columns:
+      - name: purchase_id
+        data_tests: [unique, not_null]
+      - name: client_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_client'), field: client_id}
+      - name: package_type_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_package_type'), field: package_type_id}
+      - name: purchase_date_key
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_key}

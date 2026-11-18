@@ -1,0 +1,20 @@
+select
+    session_id,
+    purchase_id,
+    client_id,
+    trainer_id,
+    club_id,
+    package_type_id,
+    cast(strftime(session_date, '%Y%m%d') as integer) as session_date_key,
+    scheduled_at,
+    booked_at,
+    duration_min,
+    session_status,
+    is_consumed,
+    is_refunded,
+    is_before_trainer_hire,
+    price_per_session_aed,
+    recognised_revenue_aed,
+    commission_aed,
+    recognised_revenue_aed - commission_aed as margin_aed
+from {{ ref('int_sessions_enriched') }}
