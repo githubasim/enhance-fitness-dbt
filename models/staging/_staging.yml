@@ -1,6 +1,65 @@
 version: 2
 
 models:
+  - name: stg_clubs
+    description: One row per club.
+    columns:
+      - name: club_id
+        data_tests: [unique, not_null]
+
+  - name: stg_trainers
+    description: One row per trainer, with commission rate and weekly availability.
+    columns:
+      - name: trainer_id
+        data_tests: [unique, not_null]
+      - name: club_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_clubs')
+                field: club_id
+
+  - name: stg_package_types
+    description: One row per package type, with list price and sessions included.
+    columns:
+      - name: package_type_id
+        data_tests: [unique, not_null]
+
+  - name: stg_clients
+    description: One row per client.
+    columns:
+      - name: client_id
+        data_tests: [unique, not_null]
+      - name: home_club_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_clubs')
+                field: club_id
+      - name: acquisition_channel
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [walk_in, referral, instagram, corporate]
+
+  - name: stg_purchases
+    description: One row per package purchase, with list and net price.
+    columns:
+      - name: purchase_id
+        data_tests: [unique, not_null]
+      - name: client_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_clients')
+                field: client_id
+      - name: package_type_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_package_types')
+                field: package_type_id
+
   - name: stg_sessions
     description: One row per booked session, with raw status.
     columns:
@@ -17,9 +76,31 @@ models:
               arguments:
                 to: ref('stg_purchases')
                 field: purchase_id
+      - name: trainer_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_trainers')
+                field: trainer_id
 
-  - name: stg_purchases
-    description: One row per package purchase, with list and net price.
+  - name: stg_payments
+    description: One row per payment against a purchase.
     columns:
-      - name: purchase_id
+      - name: payment_id
         data_tests: [unique, not_null]
+      - name: purchase_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_purchases')
+                field: purchase_id
+      - name: payment_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [paid, refunded]
+      - name: payment_method
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [card, cash, bank_transfer]
