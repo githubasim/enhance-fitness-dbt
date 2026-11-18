@@ -8,3 +8,4 @@ logs/
 data/raw/
 .vscode/
 *.code-workspace
+.user.yml
