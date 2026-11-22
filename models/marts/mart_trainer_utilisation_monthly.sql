@@ -12,8 +12,9 @@ trainer_months as (
         m.month_start,
         round(t.weekly_available_hours * 52.0 / 12, 1) as available_hours
     from {{ ref('dim_trainer') }} t
+    join {{ ref('dim_club') }} c on t.club_id = c.club_id
     join months m
-        on m.month_start >= cast(date_trunc('month', t.hire_date) as date)
+        on m.month_start >= cast(date_trunc('month', greatest(t.hire_date, c.opened_date)) as date)
 ),
 
 session_hours as (
