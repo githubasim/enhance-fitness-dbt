@@ -15,7 +15,7 @@ trainers_by_club = {c: g["trainer_id"].tolist() for c, g in trainers.groupby("cl
 all_trainers = trainers["trainer_id"].tolist()
 
 # --- clients ---
-N_CLIENTS = 2000
+N_CLIENTS = 14000
 clients = []
 for cid in range(1, N_CLIENTS + 1):
     club = int(rng.choice(clubs["club_id"], p=club_w))

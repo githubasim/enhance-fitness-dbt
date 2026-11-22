@@ -95,3 +95,22 @@ models:
               arguments: {to: ref('dim_trainer'), field: trainer_id}
       - name: utilisation_pct
         data_tests: [not_null]
+  - name: mart_client_retention_cohorts
+    description: >
+      Retention by first-purchase cohort. A client is active in a month if they had
+      at least one delivered session. The current partial month is excluded.
+    columns:
+      - name: cohort_month
+        data_tests: [not_null]
+      - name: retention_pct
+        data_tests: [not_null]
+
+  - name: mart_renewal_by_package_type
+    description: >
+      Share of matured packages followed by another purchase by the same client.
+      Matured means purchase date plus 110 percent of validity is in the past.
+    columns:
+      - name: package_type_id
+        data_tests: [unique, not_null]
+      - name: renewal_rate
+        data_tests: [not_null]
