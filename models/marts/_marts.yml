@@ -114,3 +114,28 @@ models:
         data_tests: [unique, not_null]
       - name: renewal_rate
         data_tests: [not_null]
+  - name: mart_package_pricing
+    description: >
+      One row per package type and discount band. Per-session metrics exclude refunded
+      packages and use consumed sessions (delivered plus no-show) so recent purchases
+      do not distort them. Commission is calculated on net price.
+    columns:
+      - name: package_type_id
+        data_tests: [not_null]
+      - name: discount_band_pct
+        data_tests:
+          - accepted_values:
+              arguments: {values: [0, 5, 10, 15, 20], quote: false}
+
+  - name: mart_trainer_economics
+    description: >
+      One row per trainer with recognised revenue, commission and margin, ranked within
+      club. Refunded packages are excluded. sessions_before_hire shows how many sessions
+      fall before the hire date.
+    columns:
+      - name: trainer_id
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_trainer'), field: trainer_id}
