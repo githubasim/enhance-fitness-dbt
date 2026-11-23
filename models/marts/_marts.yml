@@ -139,3 +139,16 @@ models:
           - not_null
           - relationships:
               arguments: {to: ref('dim_trainer'), field: trainer_id}
+  - name: mart_rebooking_rate
+    description: >
+      One row per club and month. Rebooking rate is the share of delivered sessions,
+      at least 14 days old, followed by another non-cancelled session from the same
+      client within 14 days. Cancelled sessions are ignored when looking for the next session.
+    columns:
+      - name: club_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_club'), field: club_id}
+      - name: rebooking_rate_14d
+        data_tests: [not_null]
